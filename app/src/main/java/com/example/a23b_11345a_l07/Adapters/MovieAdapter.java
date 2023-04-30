@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.a23b_11345a_l07.Interfaces.MovieCallback;
 import com.example.a23b_11345a_l07.MainActivity;
 import com.example.a23b_11345a_l07.Models.Movie;
 import com.example.a23b_11345a_l07.R;
@@ -25,11 +26,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private Context context;
     private ArrayList<Movie> movies;
 
+    private MovieCallback movieCallback;
+
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
         this.movies = movies;
     }
 
+    public void setMovieCallback(MovieCallback movieCallback) {
+        this.movieCallback = movieCallback;
+    }
 
     @NonNull
     @Override
@@ -44,7 +50,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = getItem(position);
         holder.movie_LBL_title.setText(movie.getTitle());
-        holder.movie_LBL_year.setText(movie.getYear()+"");
+        holder.movie_LBL_year.setText(movie.getYear() + "");
         holder.movie_LBL_duration.setText(TimeFormatter.getFormattedTime(movie.getDuration()));
         holder.movie_LBL_reviews.setText(movie.getReviews() + " Reviews");
         holder.movie_RTG_rating.setRating(movie.getRating() / 20);
@@ -83,6 +89,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             movie_LBL_year = itemView.findViewById(R.id.movie_LBL_year);
             movie_LBL_title = itemView.findViewById(R.id.movie_LBL_title);
             movie_IMG_poster = itemView.findViewById(R.id.movie_IMG_poster);
+            itemView.setOnClickListener(v -> {
+                if (movieCallback != null)
+                    movieCallback.itemClicked(getItem(getAdapterPosition()), getAdapterPosition());
+            });
+            movie_IMG_favorite.setOnClickListener(v -> {
+                if (movieCallback != null)
+                    movieCallback.favoriteClicked(getItem(getAdapterPosition()), getAdapterPosition());
+            });
         }
     }
 }

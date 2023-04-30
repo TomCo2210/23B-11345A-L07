@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.a23b_11345a_l07.Adapters.MovieAdapter;
+import com.example.a23b_11345a_l07.Interfaces.MovieCallback;
+import com.example.a23b_11345a_l07.Models.Movie;
 import com.example.a23b_11345a_l07.Utilities.DataManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +31,18 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         main_LST_movies.setLayoutManager(linearLayoutManager);
         main_LST_movies.setAdapter(movieAdapter);
+        movieAdapter.setMovieCallback(new MovieCallback() {
+            @Override
+            public void favoriteClicked(Movie movie, int position) {
+                movie.setFavorite(!movie.isFavorite());
+                main_LST_movies.getAdapter().notifyItemChanged(position);
+            }
+
+            @Override
+            public void itemClicked(Movie movie, int position) {
+                Toast.makeText(MainActivity.this, "" + movie.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void findViews() {
